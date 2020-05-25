@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>软件测试工程师管理系统</title>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<!-- <script src="js/jquery.js"></script> -->
+		<!-- 引入组件库 -->
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+		<script src="api/checkuser.php"></script>
+
+	</head>
+	<body>
+		<div id="app">
+			<el-container>
+				<!---左边部分-->
+			  <el-aside width="220px">
+				<h1>软件测试工程师<br>管理系统</h1>
+				<p>你好，admin</p>
+				<p><a href="file_import.html" target="main">首页</a> | <a href="api/logout.php">退出系统</a></p>
+				<!--左边导航-->
+				    <el-menu :default-openeds="['1']">
+					  <el-submenu index="1">
+						<template slot="title"><i class="el-icon-message"></i>资料管理</template>
+						<el-menu-item index="1-1"><a href="cate_add.html" target="main">输入工程师资料</a></el-menu-item>
+						<el-menu-item index="1-2"><a href="cate_delete.html" target="main">删除指定工程师资料</a></el-menu-item>
+						<el-menu-item index="1-3"><a href="cate_query.html" target="main">查询指定工程师资料</a></el-menu-item>
+						<el-menu-item index="1-4"><a href="cate_update.html" target="main">修改指定工程师资料</a></el-menu-item>
+						<el-menu-item index="1-5"><a href="cate_list.html" target="main">输出全部工程师资料</a></el-menu-item>
+						<el-menu-item index="1-6"><a href="cate_clear.html" target="main">清空所有工程师资料</a></el-menu-item>
+						<el-menu-item index="1-7"><a href="calculation_salary.html" target="main">计算所有工程师工资</a></el-menu-item>
+					  </el-submenu>
+					  <el-submenu index="2">
+						<template slot="title"><i class="el-icon-menu"></i>文件管理</template>
+						  <el-menu-item index="2-1"><a href="file_import.html" target="main">导入工程师资料</a></el-menu-item>
+						  <el-menu-item index="2-2"><a href="print_full_information_report.html" target="main">打印工程师信息报表</a></el-menu-item>
+						  <el-menu-item index="2-3"><a href="api/PrintExcel.php" target="main">导出到Excel</a></el-menu-item>
+						  
+					  </el-submenu>
+					  <el-submenu index="3">
+						<template slot="title"><i class="el-icon-setting"></i>资料排序</template>
+						  <el-menu-item index="3-1"><a href="cate_sort.html" target="main">资料排序</a></el-menu-item>
+					  </el-submenu>				  
+					</el-menu>
+			  </el-aside>
+				<!--右边主题-->
+				<iframe src ="file_import.html" name="main"></iframe>
+			  </el-container>
+		</div>
+		
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					
+				},
+				methods:{
+					checkuser:function(){
+						$.ajax({
+							type:'post',
+							url:'api/checkuser.php',
+							data:{},
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data){
+								
+							}
+						});
+					}
+				},
+				mounted:function(){
+					this.checkuser();
+				}
+			});
+		</script>
+		
+	</body>
+</html>

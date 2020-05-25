@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>软件测试工程师管理系统</title>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<style>
+			html,body{margin:0;padding:0;height:100%;}
+			#app{background:#000;height:100%;}
+			#myform{background:#fff;color:#444;margin-top:100px;border-radius:20px;}
+			#myform h1{text-align:center;border-bottom: 1px solid#000;padding:20px 0;}
+			#myform p{padding:0 40px;}
+			#myform .btn{text-align:center;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row>
+				<el-col :span="8" :offset="8" id="myform">
+					<h1>软件测试工程师管理系统登录</h1>
+					<p>
+					<el-input placeholder="请输入用户名" v-model="username" name="A1" prefix-icon="el-icon-star-off"></el-input>
+					</p>
+					<p>
+					<el-input type="password" v-model="password" name="A2" placeholder="请输入密码" prefix-icon="el-icon-star-on"></el-input>
+					</p>
+					<p class="btn">
+					<el-button type="primary" round @click="checklogin">立即登陆</el-button>
+					</p>
+				</el-col>
+			</el-row>
+		</div>
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					username:'admin',
+					password:'123456',
+				},
+				//定义自定义函数
+				methods:{
+					checklogin:function(){
+						var username=this.username;
+						var password=this.password;
+						//构造AJAX请求,把数据发送到服务端
+						$.ajax({
+							type:'post',
+							url:'api/checklogin.php',
+							data:JSON.stringify({"username":username,"password":password}),
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data) {
+								// console.log(data);
+								if(data.errcode==0){
+									alert(data.msg);
+									location.href="index.html";
+								}else{
+									alert(data.msg);
+								}
+							}
+						});	
+						}
+				    }
+			});
+		</script>
+		
+	</body>
+</html>
+
+

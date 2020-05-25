@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!-- 111 -->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+		<div id="app">
+			<el-container id="main">
+				<el-header height="100px">
+					<h1>欢迎您admin</h1>
+					<p></p>
+				</el-header>
+				<!--中间主体-->
+				<el-main>
+
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+						<span>工程师总信息列表</span>
+					  </div>
+					  <div class="text item" >
+							<el-table :data="tableData" style="width: 100%">
+							<el-table-column label="ID"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_id }}</span></template></el-table-column>
+							<el-table-column label="姓名"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_name }}</span></template></el-table-column>
+							<el-table-column label="性别"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_sex }}</span></template></el-table-column>
+							<el-table-column label="生日"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_birth }}</span></template></el-table-column>
+							<el-table-column label="籍贯"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_nativeplace }}</span></template></el-table-column>
+							<el-table-column label="学历"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_education }}</span></template></el-table-column>
+							<el-table-column label="地址"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_address }}</span></template></el-table-column>													
+							<el-table-column label="电话"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_phone }}</span></template></el-table-column>													
+							<el-table-column label="工龄"><template slot-scope="scope"><span style="margin-left: 10px">{{ scope.row.E_workingyears }}</span></template></el-table-column>													
+						  </el-table>
+					  </div>
+					</el-card>
+				<div id="here"></div>	
+					
+				</el-main>
+				<el-footer>&copy2020软件测试工程师管理系统</el-footer>
+			  </el-container>
+			
+		</div>
+		
+		
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					tableData: []
+					//定义生命周期函数,初始化渲染后,通过ajax获取数据
+					},
+				mounted:function(){
+					this.show();
+				},
+				methods:{
+					show:function(){
+						var _that=this;
+						$.ajax({
+							type:'get',
+							url:'api/query_all_engineer_data.php',
+							data:{},
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data){
+								// console.log(data);
+								_that.tableData=data;//修改初始数据
+								_that.tableData.forEach(function(user, index, arr){
+										user.E_birth=user.E_birth.date.split(" ")[0];
+										if(user.E_sex=='1'){
+											user.E_sex="男";
+										}else{
+											user.E_sex="女";
+										}
+										
+										if(user.E_education=='0'){
+											user.E_education="高中";
+										}else if(user.E_education=='1'){
+											user.E_education="学士";
+										}else if(user.E_education=='2'){
+											user.E_education="硕士";
+										}else if(user.E_education=='3'){
+											user.E_education="博士";
+										}else{
+											user.E_education="其他";
+										}
+								});
+							},
+							fail:function(e){
+								alert("fail");
+							},
+							error:function(e){
+								// alert("error");
+								console.log("error");
+							}
+						});
+					}
+					
+				}
+			});
+		</script>
+	</body>
+	
+</html>

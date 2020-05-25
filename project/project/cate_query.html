@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+		<div id="app">
+			<el-container id="main">
+				<el-header height="100px">
+					<h1>
+				欢迎您admin</h1>
+					<p></p>
+				</el-header>
+				<!--中间主体-->
+				<el-main>
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+						<span>查询指定工程师资料</span>
+					  </div>
+					  <div class="text item" id="admin_add">
+						<p><span>*</span>查询方式：
+							<el-select v-model="category" placeholder="请选择查询方式" size="small">
+								<el-option
+								  v-for="item in options"
+								  :key="item.value"
+								  :label="item.label"
+								  :value="item.value">
+								</el-option>
+							  </el-select>
+						</p>
+						<p><span>*</span>输入信息：<el-input  v-model="information" size="small"></el-input></p>
+						<p> <el-button type="button" v-on:click="query">查询</el-button></p>
+					  </div>
+					  <span id="result"></span>
+					</el-card>
+					
+					
+				</el-main>
+				<el-footer>&copy2020软件测试工程师管理系统</el-footer>
+			  </el-container>
+			
+		</div>
+		
+		
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					options: [{
+					  value: 0,
+					  label: '按编号查询'
+					},{
+					  value: 1,
+					  label: '按姓名查询'
+					}],
+					information:'',
+					category:'',
+				},
+				 methods:{
+					query:function(){
+						var information=this.information;
+						var category=this.category;
+						$.ajax({
+							type:'post',
+							url:'api/query_one_engineer_data.php',
+							data:JSON.stringify({"information":information,"category":category}),
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data){
+								console.log(data);
+								if(data.errcode==0){
+									location.href="cate_watch_one.html";
+								}else{
+									alert(data.msg);
+								}
+							},
+							fail:function(e){
+								alert("fail");
+							},
+							error:function(e){
+								alert("error");
+							}
+						});
+					}
+
+				}
+			});
+		</script>
+	</body>
+	
+</html>

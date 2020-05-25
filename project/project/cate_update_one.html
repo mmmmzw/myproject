@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+		<div id="app">
+			<el-container id="main">
+				<el-header height="100px">
+					<h1>
+				欢迎您admin</h1>
+					<p></p>
+				</el-header>
+				<!--中间主体-->
+				<el-main>
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+						<span>查看一个工程师资料</span>
+					  </div>
+					  <div class="text item" id="admin_add">
+						<p><span></span>编号：<el-input  v-model="id"  ></el-input>
+						<p><span></span>姓名：<el-input  v-model="name"  size="small"></el-input></p>
+						<p><span></span>性别：<el-input  v-model="sex"  size="small"></el-input></p>
+		  
+						<p><span></span>生日：
+						<el-input  v-model="birth"  size="small"></el-input>
+						</p>
+						  
+						<p><span></span>籍贯：<el-input  v-model="nativeplace"  size="small"></el-input></p>
+						<p><span></span>学历：
+							<el-select v-model="education" placeholder="请选择种类"  size="small">
+								<el-option
+								  v-for="item in options1"
+								  :key="item.value"
+								  :label="item.label"
+								  :value="item.value">
+								</el-option>
+							  </el-select>
+						</p>
+						<p><span></span>地址：<el-input  v-model="address"  size="small"></el-input></p>
+						<p><span></span>电话：<el-input  v-model="phone"  size="small"></el-input></p>
+						<p><span></span>工龄：<el-input  v-model="workingyears"  size="small"></el-input></p>
+						<p><span></span>基本薪水：<el-input  v-model="salary"  size="small"></el-input></p>
+						<p><span></span>工作天数：<el-input  v-model="E_workday"  size="small"></el-input></p>
+						<p><span></span>月效益：<el-input  v-model="E_monthly_benefit"  size="small"></el-input></p>
+						<p><span></span>月保险金：<el-input  v-model="E_monthly_premium"  size="small"></el-input></p>
+						<p><el-button type="button" v-on:click="save_update">更新</el-button>
+						<el-button type="button" v-on:click="back">取消并返回</el-button>
+						</p>
+					  </div>
+					</el-card>
+
+					
+				</el-main>
+				<el-footer>&copy2020软件测试工程师管理系统</el-footer>
+			  </el-container>
+			
+		</div>
+		
+		
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					options1: [{
+					  value: 0,
+					  label: '高中'
+					},{
+					  value: 1,
+					  label: '学士'
+					},{
+					  value: 2,
+					  label: '硕士'
+					},{
+					  value: 3,
+					  label: '博士'
+					},{
+					  value: 4,
+					  label: '其他'
+					}
+					],
+					name:'',
+					id:'',
+					sex:'',
+					nativeplace:'',
+					education:'',
+					address:'',
+					phone:'',
+					workingyears:'',
+					salary:'',
+					birth:'',
+					E_monthly_premium:'',
+					E_monthly_benefit:'',
+					E_workday:''
+				},
+				methods:{
+					back:function(){
+						window.location.href='cate_update.html';
+					},
+					show:function(){
+						var _that=this;
+						$.ajax({
+							type:'get',
+							url:'api/load_one_engineer_data.php',
+							// async:false,
+							contentType:"json/application",
+							dataType:"json",
+							data:{},
+							success:function(data){
+								console.log(data);
+								_that.id=data.E_id;
+								_that.name=data.E_name;
+								if(data.E_sex=='1'){
+									_that.sex="男";
+								}else{
+									_that.sex="女";
+								}
+								_that.birth=data.E_birth.date.split(" ")[0];
+								_that.nativeplace=data.E_nativeplace;
+								if(data.E_education=='0'){
+									_that.education="高中";
+								}else if(data.E_education=='1'){
+									_that.education="学士";
+								}else if(data.E_education=='2'){
+									_that.education="硕士";
+								}else if(data.E_education=='3'){
+									_that.education="博士";
+								}else{
+									_that.education="其他";
+								}
+								// _that.education=data.E_education;
+								_that.address=data.E_address;
+								_that.phone=data.E_phone;
+								_that.workingyears=data.E_workingyears;
+								_that.salary=data.E_base_salary;
+								_that.E_monthly_premium=data.E_monthly_premium;
+								_that.E_monthly_benefit=data.E_monthly_benefit;
+								_that.E_workday=data.E_workday;
+							},
+							fail:function(e){
+								alert("fail");
+							},
+							error:function(XMLHttpRequest, textStatus, errorThrown,data){
+								console.log("error");
+							}
+						});
+				},
+				save_update:function(){
+							var name=this.name;
+							var id=this.id;
+							var sex=this.sex;
+							var nativeplace=this.nativeplace;
+							var education=this.education;
+							var address=this.address;
+							var phone=this.phone;
+							var workingyears=this.workingyears;
+							var salary=this.salary;
+							var birth=this.birth;
+							var E_monthly_premium=this.E_monthly_premium;
+							var E_monthly_benefit=this.E_monthly_benefit;
+							var E_workday=this.E_workday;
+							$.ajax({
+								type:'post',
+								url:'api/update_one_engineer_data.php',
+								data:JSON.stringify({"id":id,"name":name,"sex":sex,"name":name,"nativeplace":nativeplace,
+								"education":education,"address":address,"phone":phone,"workingyears":workingyears,"E_workday":E_workday,
+								"salary":salary,"birth":birth,"E_monthly_premium":E_monthly_premium,"E_monthly_benefit":E_monthly_benefit}),
+								contentType:"json/application",
+								dataType:"json",
+								success:function(data) {
+									console.log(data);
+									if(data.errcode==0){
+										alert(data.msg);
+										location.href="cate_update.html";
+									}else{
+										alert(data.msg);
+									}
+								}
+							});
+					}
+				},
+				mounted:function(){
+					this.show();
+				}
+			});
+		</script>
+
+	</body>
+	
+</html>

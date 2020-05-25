@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+		<div id="app">
+			<el-container id="main">
+				<el-header height="100px">
+					<h1>
+				欢迎您admin</h1>
+					<p></p>
+				</el-header>
+				<!--中间主体-->
+				<el-main>
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+						<span>按指定内容排序</span>
+					  </div>
+					  <div class="text item" id="admin_add">
+						<p><span>*</span>排序关键词：
+							<el-select v-model="sort" placeholder="请选择排序关键词" size="small">
+								<el-option
+								  v-for="item in options"
+								  :key="item.value"
+								  :label="item.label"
+								  :value="item.test">
+								</el-option>
+							  </el-select>
+						</p>
+						<p><span>*</span>排序顺序：
+							<el-select v-model="order" placeholder="请选择排序顺序" size="small">
+								<el-option
+								  v-for="item in options2"
+								  :key="item.value"
+								  :label="item.label"
+								  :value="item.test">
+								</el-option>
+							  </el-select>
+						</p>
+						<p> <el-button type="button" v-on:click="query">查询</el-button></p>
+					  </div>
+					  <span id="result"></span>
+					</el-card>
+					
+					<el-dialog title="排序结果" :visible.sync="dialogTableVisible">
+					  <el-table :data="tableData">
+					    <el-table-column property="E_id" label="ID" width="150"></el-table-column>
+					    <el-table-column property="E_name" label="姓名" width="200"></el-table-column>
+					    <el-table-column property="E_sex" label="性别"></el-table-column>
+						<el-table-column property="E_education" label="学历"></el-table-column>
+						<el-table-column property="E_workingyears" label="工龄"></el-table-column>
+						<el-table-column property="E_base_salary" label="基本薪水"></el-table-column>
+						<el-table-column property="E_workday" label="月工作天数"></el-table-column>
+						<el-table-column property="E_monthly_salary" label="月工资"></el-table-column>
+					  </el-table>
+					</el-dialog>
+					
+				</el-main>
+				<el-footer>&copy2020软件测试工程师管理系统</el-footer>
+			  </el-container>
+			
+		</div>
+		
+		
+		<script>
+			new Vue({
+				el:'#app',
+				data:{
+					options: [{
+					  value: 0,
+					  test:'E_id',
+					  label: '按ID排序'
+					},{
+					  value: 1,
+					  test:'E_education',
+					  label: '按学历排序'
+					},{
+					  value: 2,
+					  test:'E_base_salary',
+					  label: '按基本薪水排序'
+					},{
+					  value: 3,
+					  test:'E_workday',
+					  label: '按本月工作天数排序'
+					},{
+					  value: 4,
+					  test:'E_monthly_salary',
+					  label: '按月工资排序'
+					}],
+					options2:[{
+						value:0,
+						test:'DESC',
+						label:'降序'
+					},{
+						value:1,
+						test:'ASC',
+						label:'升序'
+					}],
+					order:'',
+					sort:'',
+					dialogTableVisible: false,
+					tableData:[]
+				},
+				 methods:{
+					query:function(){
+						var sort=this.sort;
+						var order=this.order;
+						var _that=this;
+						// console.log(sort);
+						// console.log(order);
+						$.ajax({
+							type:'post',
+							url:'api/sort.php',
+							data:JSON.stringify({"sort":sort,"order":order}),
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data){
+								console.log(data);
+								_that.tableData=data;
+								_that.tableData.forEach(function(user, index, arr){
+										user.E_birth=user.E_birth.date.split(" ")[0];
+										if(user.E_sex=='1'){
+											user.E_sex="男";
+										}else{
+											user.E_sex="女";
+										}
+										
+										if(user.E_education=='0'){
+											user.E_education="高中";
+										}else if(user.E_education=='1'){
+											user.E_education="学士";
+										}else if(user.E_education=='2'){
+											user.E_education="硕士";
+										}else if(user.E_education=='3'){
+											user.E_education="博士";
+										}else{
+											user.E_education="其他";
+										}
+								});
+								_that.dialogTableVisible=true;
+							},
+							fail:function(e){
+								alert("fail");
+							},
+							error:function(e){
+								alert("error");
+							}
+						});
+					}
+
+				}
+			});
+		</script>
+	</body>
+	
+</html>

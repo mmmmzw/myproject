@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+			<div id="app">
+				<el-container id="main">
+					<el-header height="100px">
+						<h1>
+					欢迎您admin</h1>
+						<p></p>
+					</el-header>
+					<!--中间主体-->
+					<el-main>
+						<el-card class="box-card" style="width:40%;margin-left: 20%;margin-top:auto;">
+						  <div slot="header" class="clearfix">
+							<span>请输入管理员密码确认清空信息库</span>
+						  </div>
+						  <div class="text item"style="text-align: center;">
+							<p>
+							<el-input type="password" v-model="password" name="A2" placeholder="请输入密码" prefix-icon="el-icon-star-on"></el-input>
+							</p>
+							<el-popover placement="top"  width="160"  v-model="visible">
+							  <p>确定要清空吗？</p>
+							  <div style="text-align: right; margin: 0">
+							    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+							    <el-button type="primary" size="mini" @click="clear">确定</el-button>
+							  </div>
+							  <el-button slot="reference">删除</el-button>
+							</el-popover>
+						  </div>
+						</el-card>
+					</el-main>
+					<el-footer>&copy2020软件测试工程师管理系统</el-footer>
+				  </el-container>
+			</div>
+			
+			
+			<script>
+				new Vue({
+					el:'#app',
+					data:{
+						password:'123456',
+						
+						 visible: false
+						
+					},
+					methods:{
+						clear:function(){
+							var password=this.password;
+							$.ajax({
+								url:'api/clear_engineer_data.php',
+								type:'post',
+								data:JSON.stringify({"password":password}),
+								contentType:"json/application",
+								dataType:"json",
+								success:function(data){
+									if(data.errcode=='0'){
+										alert("清空成功");
+										location.href="main.html";
+									}else{
+										alert('清空失败');
+									}
+								}
+							});
+						}
+					}
+				}
+				);
+			</script>
+	</body>
+</html>
+
+

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui@2.13.1/lib/index.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.1/lib/theme-chalk/index.css">
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+	</head>
+	<body>
+		<div id="app">
+			<el-card class="box-card">
+			  <div slot="header" class="clearfix">
+				<span>快速生成数据库</span>
+			  </div>
+			  
+			  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+			    <el-form-item label="编号" prop="id">
+			      <el-input v-model="ruleForm.id"></el-input>
+			    </el-form-item>
+			    <el-form-item label="姓名" prop="name">
+			      <el-input v-model="ruleForm.name"></el-input>
+			    </el-form-item>
+			    <el-form-item label="性别" prop="sex">
+			      <el-radio-group v-model="ruleForm.sex">
+			        <el-radio label="男" value="1"></el-radio>
+			        <el-radio label="女" value="0"></el-radio>
+			      </el-radio-group>
+			    </el-form-item>
+			    <el-form-item label="生日" required>
+			      <el-col :span="11">
+			        <el-form-item prop="date1">
+			          <el-date-picker type="date"
+			  		v-model="ruleForm.date1" 
+			  		value-format="yyyy-MM-dd" 
+			  		placeholder="选择日期" 
+			  		style="width: 100%;"></el-date-picker>
+			        </el-form-item>
+			      </el-col>
+			    </el-form-item>
+			    <el-form-item label="籍贯" prop="nativeplace">
+			      <el-input v-model="ruleForm.nativeplace"></el-input>
+			    </el-form-item>
+			    <el-form-item label="学历" prop="education">
+			      <el-select v-model="ruleForm.education" placeholder="请选择学历">
+			        <el-option label="高中" value="0"></el-option>
+			        <el-option label="学士" value="1"></el-option>
+			  	  <el-option label="硕士" value="2"></el-option>
+			  	  <el-option label="博士" value="3"></el-option>
+			  	  <el-option label="其他" value="4"></el-option>
+			      </el-select>
+			    </el-form-item>
+			    <el-form-item label="地址" prop="address">
+			      <el-input v-model="ruleForm.address"></el-input>
+			    </el-form-item>
+			    <el-form-item label="电话" prop="phone">
+			      <el-input v-model="ruleForm.phone"></el-input>
+			    </el-form-item>
+			    <el-form-item label="工龄" prop="workingyears">
+			      <el-input v-model="ruleForm.workingyears"></el-input>
+			    </el-form-item>
+			    <el-form-item label="基本薪水" prop="base_salary">
+			      <el-input v-model="ruleForm.base_salary"></el-input>
+			    </el-form-item>
+			    <el-form-item label="月工作天数" prop="workday">
+			      <el-input v-model="ruleForm.workday"></el-input>
+			    </el-form-item>
+			    <el-form-item label="月效益" prop="monthly_benefit">
+			      <el-input v-model="ruleForm.monthly_benefit"></el-input>
+			    </el-form-item>
+			    <el-form-item label="月保险金" prop="monthly_premium">
+			      <el-input v-model="ruleForm.monthly_premium"></el-input>
+			    </el-form-item>
+			  
+			    <el-form-item>
+			      <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+			      <el-button @click="resetForm('ruleForm')">重置</el-button>
+			    </el-form-item>
+			  </el-form>
+			  
+			</el-card>
+			
+		
+		</div>
+		<script type="text/javascript">
+			var Main = {
+			    data() {
+					var checkNum = (rule,value,callback) => {
+					                if(value === undefined || value === null || value === '') {
+					                    return new Error('必填信息')
+					                }else {
+					                    // if(!Number.isInteger(parseInt(value))) {
+					                    //     callback(new Error('请输入数字值'))
+					                    // }else{
+					                    //     callback()
+					                    // }
+										var reNumber = /^\d+$/
+										//负整数
+										var reNeNumber = /^-\d+$/
+										//正实数
+										var reRealNumber1 = /^[1-9]\d*[.]\d+$/  //非零开头
+										var reRealNumber2 = /^0[.]\d+$/ //零开头
+										//负实数
+										var reNeRealNumber1 = /^-[1-9]\d*[.]\d+$/  //非零开头
+										var reNeRealNumber2 = /^-0[.]\d+$/ //零开头
+										if (reNumber.test(value) || reNeNumber.test(value) 
+										|| reRealNumber1.test(value) || reRealNumber2.test(value)
+										|| reNeRealNumber1.test(value)|| reNeRealNumber2.test(value)){
+											    callback()
+										}
+										else{
+											callback(new Error('请输入一串纯数字'))
+										}
+					                }
+					            }
+					var checkphone = (rule,value,callback) => {
+					                if(value === undefined || value === null || value === '') {
+					                    return new Error('必填信息')
+					                }else {
+					                    var reg=/^[1][3,4,5,7,8][0-9]{9}$/;
+					                      if(!reg.test(value)){
+											  console.log("if")
+											  callback(new Error('请输入正确的电话格式'))
+										  }else{
+											  console.log("else")
+											  callback()
+										  }
+										  }
+					            }
+					var checkworkday = (rule,value,callback) => {
+					                if(value === undefined || value === null || value === '') {
+					                    return new Error('必填信息')
+					                }else {
+
+										var reNumber = /^\d+$/
+										//正实数
+										var reRealNumber1 = /^[1-9]\d*[.]\d+$/  //非零开头
+										var reRealNumber2 = /^0[.]\d+$/ //零开头
+
+										if (reNumber.test(value) || reRealNumber1.test(value) || reRealNumber2.test(value)){
+											    if(parseInt(value)>=0&&parseInt(value)<=31){
+													callback()
+												}else{
+													callback(new Error('0<=月工作天数<=31'))
+												}
+												
+										}
+										else{
+											callback(new Error('请输入一串纯数字'))
+										}
+					                }
+					            }
+					var checkworkingyears = (rule,value,callback) => {
+									intvalue=parseInt(value)
+					                if(!value) {
+					                    return new Error('必填信息')
+					                }else {
+					                    if(!Number.isInteger(intvalue)) {
+					                        callback(new Error('请输入数字值'))
+					                    }else{
+											if(intvalue<0||intvalue>50){
+												callback(new Error('0<=工龄<=50'))
+											}else{
+												var reNumber = /^\d+$/
+												//负整数
+												var reNeNumber = /^-\d+$/
+												//正实数
+												var reRealNumber1 = /^[1-9]\d*[.]\d+$/  //非零开头
+												var reRealNumber2 = /^0[.]\d+$/ //零开头
+												//负实数
+												var reNeRealNumber1 = /^-[1-9]\d*[.]\d+$/  //非零开头
+												var reNeRealNumber2 = /^-0[.]\d+$/ //零开头
+												if (reNumber.test(value) || reNeNumber.test(value) 
+												|| reRealNumber1.test(value) || reRealNumber2.test(value)
+												|| reNeRealNumber1.test(value)|| reNeRealNumber2.test(value)){
+													    callback()
+												}
+												else{
+													callback(new Error('请输入一串纯数字'))
+												}
+											}
+					                        
+					                    }
+					                }
+					            }
+			      return {
+			        ruleForm: {
+					  id:'',
+			          name: '',
+					  sex: '',
+					  date1: '',
+					  nativeplace:'',
+			          education: '',
+					  address:'',
+					  phone:'',
+					  workingyears:'',
+					  base_salary:'',
+					  monthly_premium:'',
+					  monthly_benefit:'',
+					  workday:'',
+					  
+					
+					  
+			        },
+			        rules: {
+					  id: [
+					    { required: true, message: '请输入ID', trigger: 'blur' },
+					    { min: 4, max: 4, message: '用四位数字表示,例如：0001', trigger: 'blur' },
+						{validator: checkNum, trigger: ['change']}
+						
+						// { type:'int', message: '请输入一个整数', trigger: 'blur' }
+					  ],
+			          name: [
+			            { required: true, message: '请输入姓名', trigger: 'blur' },
+			            { min: 1, max: 20, message: '0<姓名长度<=20', trigger: 'blur' }
+			          ],
+					  sex: [
+					    { required: true, message: '请输入性别', trigger: 'change' }
+					  ],
+					  date1: [
+					    { type: 'string', required: true, message: '请选择出生日期', trigger: 'change' }
+					  ],
+					  nativeplace: [
+					    { required: true, message: '请输入籍贯', trigger: 'change' },
+						{ min: 1, max: 20, message: '0<籍贯长度<=20', trigger: 'blur' }
+					  ],
+			          education: [
+			            { required: true, message: '请选择学历', trigger: 'change' },
+						{ min: 0, max: 4, message: '请选择框内的内容', trigger: 'blur' }
+			          ],
+					  address: [
+					    { required: true, message: '请输入住址', trigger: 'blur' },
+						{ min: 1, max: 30, message: '0<住址长度<=30', trigger: 'blur' }
+					  ],
+					  phone: [
+					    { required: true, message: '请输入联系电话', trigger: 'blur' },
+						{ min: 1, max: 15, message: '0<电话长度<=15', trigger: 'blur' },
+						{validator: checkphone, trigger: ['change']}
+					  ],
+					  workingyears: [
+					    { required: true, message: '请输入工龄', trigger: 'blur' },
+						{validator: checkworkingyears, trigger: ['change']}
+					  ],
+					  base_salary: [
+					    { required: true, message: '请输入基本薪水', trigger: 'blur' },
+						{ min: 1, max: 10,message: '0<基本薪水长度<=10', trigger: 'blur' },
+						{validator: checkNum, trigger: ['change']}
+					  ],
+					  monthly_benefit: [
+					    { required: true, message: '请输入该工程师的月绩效', trigger: 'blur' },
+						{ min: 0, max: 10,message: '0<=月绩效长度<=10', trigger: 'blur' },
+						{validator: checkNum, trigger: ['change']}
+					  ],
+					  monthly_premium: [
+					    { required: true, message: '请输入该工程师的月保险金', trigger: 'blur' },
+						{ min: 0,max: 10,message: '0<=月保险金长度<=10', trigger: 'blur' },
+						{validator: checkNum, trigger: ['change']}
+					  ],
+					  workday: [
+					    { required: true, message: '请输入该工程师的月工作天数', trigger: 'blur' },
+						{ min: 0,max: 10,message: '0<=月工作天数长度<=10', trigger: 'blur' },
+						{validator: checkworkday, trigger: ['change']}
+					  ]	  
+			          
+			        }
+			      };
+			    },
+			    methods: {
+			      submitForm(formName) {
+			        this.$refs[formName].validate((valid) => {
+			          if (valid) {
+			            // alert('添加成功!');
+						console.log(this.ruleForm);
+						$.ajax({
+							type:'post',
+							url:'api/input_one_engineer_data.php',
+							data:JSON.stringify({"name":this.ruleForm.name,"id":this.ruleForm.id,"sex":this.ruleForm.sex,"date1":this.ruleForm.date1,
+							"nativeplace":this.ruleForm.nativeplace,"education":this.ruleForm.education,"address":this.ruleForm.address,
+							"phone":this.ruleForm.phone,"workingyears":this.ruleForm.workingyears,"base_salary":this.ruleForm.base_salary,
+							"monthly_premium":this.ruleForm.monthly_premium,"monthly_benefit":this.ruleForm.monthly_benefit,"workday":this.ruleForm.workday
+							}),
+							contentType:"json/application",
+							dataType:"json",
+							success:function(data) {
+								// console.log(data);
+								if(data.errcode==0){
+									alert(data.msg);
+									// location.href="cate_list.html";
+								}else{
+									alert(data.msg);
+								}
+							}
+						});
+			          } else {
+			            console.log('error submit!!');
+			            return false;
+			          }
+			        });
+			      },
+			      resetForm(formName) {
+			        this.$refs[formName].resetFields();
+			      }
+			    }
+			  }
+			var Ctor = Vue.extend(Main)
+			new Ctor().$mount('#app')
+		</script>
+	</body>
+</html>
